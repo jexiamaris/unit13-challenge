@@ -1,0 +1,2 @@
+# Robo Advisor for Retirement Plans
+This project was made on  Amazon Web Services using Amazon Lex and Lambda services to create a Robo advisor that could be used by customers or potential new customers to get investment portfolio recommendations for retirement.
