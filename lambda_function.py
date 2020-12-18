@@ -84,7 +84,7 @@ def validate_data(age, investment_amount, intent_request):
     Validates the data provided by the user.
     """
 
-    # Validate that the user is over 21 years old
+    # Validate that the user is less than 65 years old
     if age is not None:
         age= int(age)
         if (age < 1 or age >65):
@@ -98,20 +98,18 @@ def validate_data(age, investment_amount, intent_request):
     # Validate the investment amount, it should be > 0
     if investment_amount is not None:
         investment_amount = parse_int(
-            investment_amount
-        )  # Since parameters are strings it's important to cast values
-        if investment_amount <= 5000:
+            investment_amount ) 
+            # Since parameters are strings it's important to cast values
+        if investment_amount < 5000:
             return build_validation_result(
                 False,
-                "investment_amount",
+                "investmentAmount",
                 "The investment amount should be greater than 5,000, "
                 "please provide a correct investment amount.",
             )
 
     # A True results is returned if age or amount are valid
     return build_validation_result(True, None, None)
-
-
 
 
 ### Intents Handlers ###
@@ -122,7 +120,7 @@ def recommend_portfolio(intent_request):
 
     first_name = get_slots(intent_request)["firstName"]
     age = get_slots(intent_request)["age"]
-    investment_amount = get_slots(intent_request)["investmentAmount"]
+    investment_amount = get_slots(intent_request)["investmentAmount"] 
     risk_level = get_slots(intent_request)["riskLevel"]
     source = intent_request["invocationSource"]
 
@@ -139,43 +137,22 @@ def recommend_portfolio(intent_request):
             
             return elicit_slot(
                 intent_request["sessionAttributes"],
-                intent_request["currentIntent"],
+                intent_request["currentIntent"]["name"],
                 slots,
                 validation_result["violatedSlot"],
                 validation_result["message"])
         
         ### YOUR DATA VALIDATION CODE ENDS HERE ###
-
-        # Fetch current session attibutes
+       # Fetch current session attibutes
         output_session_attributes = intent_request["sessionAttributes"]
-
+    
         return delegate(output_session_attributes, get_slots(intent_request))
+ 
 
     # Get the initial investment recommendation
-
-    ### YOUR FINAL INVESTMENT RECOMMENDATION CODE STARTS HERE ###
-    def initial_recommendation(risk_level):
-    
-        if risk_level==none: 
-            return ("100% bonds (AGG), 0% equities (SPY)")
-    
-        elif  risk_level == very_low:
-            return ("80% bonds (AGG), 20% equities (SPY)")
-    
-        elif risk_level==low: 
-            return ("60% bonds (AGG), 40% equities (SPY)")
-    
-        elif risk_level== medium:
-            return("40% bonds (AGG), 60% equities (SPY)")
-    
-        elif risk_level== high: 
-            return ("20% bonds (AGG), 80% equities (SPY)")
-    
-        elif risk_level== very_high:
-            return ("0% bonds (AGG), 100% equities (SPY)")
-
+   
     ### YOUR FINAL INVESTMENT RECOMMENDATION CODE ENDS HERE ###
-    initial_recommendation= initial_recommendation(risk_level)
+    initial_recommendation= recommendation(risk_level)
     # Return a message with the initial recommendation based on the risk level.
     return close(
         intent_request["sessionAttributes"],
@@ -189,7 +166,29 @@ def recommend_portfolio(intent_request):
             ),
         },
     )
+    
+def recommendation(risk_level):
+    ### YOUR FINAL INVESTMENT RECOMMENDATION CODE STARTS HERE ###
+    if risk_level=="None": 
+        return ("100% bonds (AGG), 0% equities (SPY)")
 
+    elif  risk_level == "Very Low":
+        return ("80% bonds (AGG), 20% equities (SPY)")
+
+    elif risk_level=="Low": 
+        return ("60% bonds (AGG), 40% equities (SPY)")
+
+    elif risk_level== "Medium":
+        return("40% bonds (AGG), 60% equities (SPY)")
+
+    elif risk_level== "High": 
+        return ("20% bonds (AGG), 80% equities (SPY)")
+
+    elif risk_level== "Very High":
+        return ("0% bonds (AGG), 100% equities (SPY)")
+        
+    else:
+        return ("Error. Please select a level of risk")
 
 ### Intents Dispatcher ###
 def dispatch(intent_request):
@@ -214,4 +213,3 @@ def handler(event, context):
     """
 
     return dispatch(event)
-

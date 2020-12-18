@@ -7,4 +7,9 @@ The following images have the  bot, intent, and slot using Amazon Lex.
 
 ![utterances](./Images/utterances.png)
 
-![slots](./Images/slotst.png)
+![slots](./Images/slots.png)
+
+### Robo Advisor in Action
+The following video is a demo of Robo Advisor in action from the test window.
+![demo](./Images/amazon_lex.mp4)
+
